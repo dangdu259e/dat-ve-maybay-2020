@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{style/theme.css}" media="all"/>
+    <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" media="all"/>
+    <link rel="shortcut icon" type="image/svg" th:href="@{images/myimages/airplane.svg}"/>
+
+    <title>Trang chủ</title>
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/slides.min.jquery.js"></script>
+
+</head>
+<body>
+<div id="container">
+    <div class="main clearfix">
+        <div class="inner-container">
+            <ul class="pathway clearfix">
+                <li><a th:href="@{/}">1. Tìm chuyến bay</a></li>
+                <li class="active"><a>2. Chọn chuyến bay</a></li>
+                <li><a>3. Thông tin hành khách</a></li>
+                <li><a>4. Kết thúc</a></li>
+            </ul>
+            <div class="box-main clearfix" th:object="${flightData}" id="box-main-clearfix">
+                <div class="col-left" id ="col-left">
+                    <form th:action="@{/passengerdetail}" method="post" onsubmit="return validateForm()">
+                        <div class="box-item">
+                            <h2 class="title-item">
+                                <strong>Chọn chuyến bay</strong>
+                                <span>(<span class="clblue" th:text="${orig_place}">Hà Nội</span>
+                    <span class="text-plane" th:if="${flightData.returnFlights.size() != 0}">
+                      <img th:src="@{images/img-khu-hoi.png}" width="16" height="20" alt=""/>
+                    </span>
+                    <span class="text-plane" th:if="${flightData.returnFlights.size() == 0}">
+                      <img th:src="@{images/img-1chieu.png}" width="16" height="20" alt=""/>
+                    </span>
+                    <span class="clblue" th:text="${des_place}">TP.Hồ Chí Minh</span>)
+                  </span>
+                            </h2>
+<!--                            <ul class="choose-day clearfix">-->
+<!--                                <li><a href="#">THỨ HAI<br/>-->
+<!--                                    25/04</a></li>-->
+<!--                                <li class="active"><a href="#">THỨ ba<br/>-->
+<!--                                    26/04</a></li>-->
+<!--                                <li><a href="#">THỨ tư<br/>-->
+<!--                                    27/04</a></li>-->
+<!--                                <li><a href="#">THỨ năm<br/>-->
+<!--                                    28/04</a></li>-->
+<!--                                <li><a href="#">THỨ sáu<br/>-->
+<!--                                    29/04</a></li>-->
+<!--                                <li><a href="#">THỨ bảy<br/>-->
+<!--                                    30/04</a></li>-->
+<!--                                <li class="no-bor"><a href="#">chủ nhật<br/>-->
+<!--                                    01/05</a></li>-->
+<!--                            </ul>-->
+                            <div class="box-conts clearfix">
+                                <table class="table" id="tblDepart">
+                                    <thead>
+                                    <tr class="title-row">
+                                        <td width="10%" style="text-align: left"> Chặng bay</td>
+                                        <td width="20%" style="text-align: left"> Hãng bay</td>
+                                        <td width="15%"> Giờ đi</td>
+                                        <td width="15%"> Giờ đến</td>
+                                        <td width="10%"> Số chặng</td>
+                                        <td width="15%"> Giá</td>
+                                        <td width="15%">&nbsp;</td>
+                                        <td width="15%">&nbsp;</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="flight, state: ${flightData.departureFlights}">
+                                        <tr>
+                                            <td class="img-airline" style="border-bottom: 1px dotted #d8d8d8"> Chiều
+                                                đi:<br/>
+                                                <span th:text="${flight.depart_date.split('/')[0] + '/' + flight.depart_date.split('/')[1] }">25/05</span>
+                                            </td>
+                                            <td class="img-airline" style="border-bottom: 1px dotted #d8d8d8;">
+                                                <div class="airline_brand clearfix">
+                                                    <div class="img-fly">
+                                <span class="img50">
+                                  <img th:src="@{images/VN.gif}" alt="VN">
+                                </span>
+                                                    </div>
+                                                    <div class="text-fly">
+                                                        VietNam AirLine
+                                                        <br/>
+                                                        <th:block
+                                                                th:text="${flight.flightSegments[0].flightNumber}"></th:block>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="time" style="border-bottom: 1px dotted #d8d8d8;">
+                                                <b th:text="${flight.depart_date.split('/')[3]}"> 10:40 </b>
+                                                <th:block th:text="${flight.original}"></th:block>
+                                            </td>
+                                            <td class="time" style="border-bottom: 1px dotted #d8d8d8;">
+                                                <b th:text="${flight.arrival_date.split('/')[3]}"> 14:50 </b>
+                                                <th:block th:text="${flight.destination}"></th:block>
+                                            </td>
+                                            <td style="border-bottom: 1px dotted #d8d8d8;"><b
+                                                    th:text="${flight.flightSegments.length + ' chặng'}">2 chặng</b>
+                                            </td>
+                                            <td class="price" rowspan="1"> <!--style="border-bottom: 3px solid #d8d8d8"--><b
+                                                    th:text="${flight.priceToString()}">10,500,000 VND</b></td>
+                                            <!--                        <td class="view-detail" onclick="return viedetail('27284');" rowspan="2" style="border-bottom: 3px solid #d8d8d8; padding-top: 25px;"><a href="javascript:;">Chi tiết</a></td>-->
+                                            <td rowspan="1"> <!-- style="border-bottom: 3px solid #d8d8d8"-->
+                                                <!--                                            <form th:action="@{DatVe-B3}" method="post">-->
+<!--                                                <input type="hidden" -->
+<!--                                                       name="flight_fare_id_Depart"/>-->
+                                                <input type="radio" th:value="${flight.flight_fare_id}" name="flight_fare_id_Depart">
+                                                <input type="radio" name="departFlight"
+                                                       style="right: 40px;top:25px;display:none">
+                                                <!--                                            </form>-->
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <th:block th:if="${type_fight} == '2'">
+                            <div class="box-item">
+                                <h2 class="title-item"><strong>Chọn chuyến bay: </strong>
+                                    </span>(<span class="clblue" th:text="${des_place}">.........</span></span>
+                                    <img th:src="@{images/img-khu-hoi.png}" width="16" height="20" alt=""/>
+                                    </span> <span class="clblue" th:text="${orig_place}">.........</span>)</span></h2>
+<!--                                <ul class="choose-day clearfix">-->
+<!--                                    <li><a href="#">THỨ HAI<br/>-->
+<!--                                        25/04</a></li>-->
+<!--                                    <li class="active"><a href="#">THỨ ba<br/>-->
+<!--                                        26/04</a></li>-->
+<!--                                    <li><a href="#">THỨ tư<br/>-->
+<!--                                        27/04</a></li>-->
+<!--                                    <li><a href="#">THỨ năm<br/>-->
+<!--                                        28/04</a></li>-->
+<!--                                    <li><a href="#">THỨ sáu<br/>-->
+<!--                                        29/04</a></li>-->
+<!--                                    <li><a href="#">THỨ bảy<br/>-->
+<!--                                        30/04</a></li>-->
+<!--                                    <li class="no-bor"><a href="#">chủ nhật<br/>-->
+<!--                                        01/05</a></li>-->
+<!--                                </ul>-->
+                                <div class="box-conts clearfix">
+                                    <table class="table" id="tblDepart">
+                                        <thead>
+                                        <tr class="title-row">
+                                            <td width="10%" style="text-align: left"> Chặng bay</td>
+                                            <td width="20%" style="text-align: left"> Hãng bay</td>
+                                            <td width="15%"> Giờ đi</td>
+                                            <td width="15%"> Giờ đến</td>
+                                            <td width="10%"> Số chặng</td>
+                                            <td width="15%"> Giá</td>
+                                            <td width="15%">&nbsp;</td>
+                                            <td width="15%">&nbsp;</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <th:block th:each="flightReturn: ${flightData.returnFlights}">
+                                            <tr>
+                                                <td class="img-airline" style="border-bottom: 1px dotted #d8d8d8"> Chiều
+                                                    về:<br/>
+                                                    <span th:text="${flightReturn.depart_date.split('/')[0] + '/' + flightReturn.depart_date.split('/')[1] }">25/05</span>
+                                                </td>
+                                                <td class="img-airline" style="border-bottom: 1px dotted #d8d8d8;">
+                                                    <div class="airline_brand clearfix">
+                                                        <div class="img-fly">
+                                <span class="img50">
+                                  <img th:src="@{images/VN.gif}" alt="VN">
+                                </span>
+                                                        </div>
+                                                        <div class="text-fly">
+                                                            VietNam AirLine
+                                                            <br/>
+                                                            <th:block
+                                                                    th:text="${flightReturn.flightSegments[0].flightNumber}"></th:block>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="time" style="border-bottom: 1px dotted #d8d8d8;">
+                                                    <b th:text="${flightReturn.depart_date.split('/')[3]}"> 10:40 </b>
+                                                    <th:block th:text="${flightReturn.original}"></th:block>
+                                                </td>
+                                                <td class="time" style="border-bottom: 1px dotted #d8d8d8;">
+                                                    <b th:text="${flightReturn.arrival_date.split('/')[3]}"> 14:50 </b>
+                                                    <th:block th:text="${flightReturn.destination}"></th:block>
+                                                </td>
+                                                <td style="border-bottom: 1px dotted #d8d8d8;"><b
+                                                        th:text="${flightReturn.flightSegments.length + ' chặng'}">2
+                                                    chặng</b>
+                                                </td>
+                                                <td class="price" rowspan="1"> <!--style="border-bottom: 3px solid #d8d8d8"-->
+                                                    <b
+                                                            th:text="${flightReturn.priceToString()}">10,500,000 VND</b>
+                                                </td>
+                                                <td rowspan="1"> <!--style="border-bottom: 3px solid #d8d8d8"-->
+<!--                                                    <input type="hidden" -->
+<!--                                                           name="flight_fare_id_Return"/>-->
+                                                    <input type="radio" th:value="${flightReturn.flight_fare_id}" value="Đặt vé" name="flight_fare_id_Return" >
+                                                    <input type="radio" name="departFlight" id=""
+                                                           style="right: 40px;top:25px;display:none">
+                                                </td>
+                                            </tr>
+                                        </th:block>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </th:block>
+                        <div class="btnsearch clearfix">
+                            <input type="button" class="btn-pre" value="Quay Lại" onclick="history.back()"/>
+                            <input type="submit" class="btn-next" value="Tiếp Tục"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#slides').slides({
+            generateNextPrev: true,
+            play: 5000
+        });
+
+    });
+    function validateRadio (radios)
+    {
+        for (i = 0; i < radios.length; ++ i)
+        {
+            if (radios [i].checked) return true;
+        }
+        return false;
+    }
+    function validateForm() {
+        var depart = document.getElementsByName("flight_fare_id_Depart");
+        var return_flight = document.getElementsByName("flight_fare_id_Return");
+        var c= 0;                               //chưa chọn chiều đi
+        var d= -1;                              //chưa có chiều về
+        for (var i = 0; i < depart.length; i++) {
+            if(depart[i].checked){
+                c= c+1;                                                     //đã chọn chiều đi => c=1
+            }
+        }
+        // 1 chiều
+        if(return_flight[0] == null){
+            if(c!=1){                                       // chưa chọn chiều đi
+                alert("Quý khách vui lòng chọn chiều đi")
+                return false;
+            }else{
+                return true;                              // đã chọn chiều đi
+            }
+        }
+
+        if(return_flight!= null){                                           //tồn tại chiều về => d=0
+            d = 0 ; // tồn tại chiều về
+            for (var i = 0; i < return_flight.length; i++) {
+                if(return_flight[i].checked){
+                    d= d+ 1;                                                //đã chọn chiều về => d=1
+                }
+            }
+        }
+
+        // 2 chiều
+        if (return_flight != null) {
+            if (c != 1) {
+                alert("Quý khách vui lòng chọn chiều đi !")           // chưa chọn chiều đi
+                return false;
+            } else if (c == 1 && d == 0) {                //đã chọn chiều đi, chưa chọn chiều về
+                alert("Quý khách vui lòng chọn chiều về!")
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+</script>
+</body>
+</html>

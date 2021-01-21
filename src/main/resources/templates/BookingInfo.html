@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="vn" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{style/bootstrap.css}" media="all"/>
+    <link rel="stylesheet" type="text/css" th:href="@{style/theme.css}" media="all"/>
+    <title>Trang chủ</title>
+    <script type="application/javascript" th:src="@{js/jquery-1.7.1.min.js}"></script>
+    <link rel="shortcut icon" type="image/svg" th:href="@{images/myimages/airplane.svg}"/>
+</head>
+<body>
+<div id="container">
+    <div class="main clearfix">
+        <div class="inner-container">
+            <ul class="pathway clearfix">
+                <li><a th:href="@{/}">1. Tìm chuyến bay</a></li>
+                <li><a>2. Chọn chuyến bay</a></li>
+                <li><a>3. Thông tin hành khách</a></li>
+                <li class="active"><a>4. Thanh toán</a></li>
+            </ul>
+            <div class="box-main clearfix">
+                <div class="col-left" style="width: 625px;">
+                    <div class="plane-detail clearfix">
+                        <form th:action="@{/showpayment}" method="post">
+                        <div class="welcome">
+                            <h3 th:if="${#session.getAttribute('status').equals('paid')}">Bạn đã thanh toán thành công</h3>
+                            <h3 th:if="${#session.getAttribute('status').equals('booked')}">Bạn đã đặt vé thành công</h3>
+                            <h3 th:if="${#session.getAttribute('status').equals('canceled')}">Bạn đã hủy giao dịch. Vui lòng thanh toán lại</h3>
+                            <ul class="form-style">
+                                <li>
+                                    Mã đặt chỗ của bạn là <strong class="clred" th:text="${bookCode}">DAIOEP</strong>.
+                                </li>
+                                <th:block th:if="${#session.getAttribute('status').equals('booked') || #session.getAttribute('status').equals('canceled')}">
+                                    <li>Vui lòng thanh toán toán ngay hoặc sử dụng mã này để thanh toán trên các kênh
+                                        khác trong vòng 20 phút.
+                                    </li>
+                                    <li th:if="${#session.getAttribute('status').equals('booked')}">Thông tin xác nhận đặt vé đã được gửi đến số điện thoại
+                                        <strong th:text="${payer.phone}">0977084686</strong> và email <a class="under"
+                                                                                href="#" th:text="${payer.contactEmail}">haonv@vnpay.vn</a></li>
+                                </th:block>
+                                <th:block th:if="${#session.getAttribute('status').equals('paid')}">
+                                    <li> Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi</li>
+                                    <li> Vui lòng quay lại trang chủ để tiếp tục đặt vé</li>
+                                </th:block>
+                            </ul>
+                            <div class="button-back">
+                                <p align="center">
+                                    <a th:href="@{/}" class="back-home">Quay lại đặt vé</a>
+                                    <th:block th:if="${#session.getAttribute('status').equals('booked') || #session.getAttribute('status').equals('canceled')}">
+                                            <input type="submit" value="Thanh toán ngay" class="btn-pay">
+<!--                                                   pmbx_context="8E1BB81D-73CB-418A-8915-2F20FAB4D3A9">-->
+                                            <input type="hidden" th:value="${bookCode}" name="bookCode"/>
+                                            <input type="hidden" th:value="${totalPrice_t}" name="amount"/>
+                                    </th:block>
+                                </p>
+                            </div>
+                        </div>
+                        </form>
+
+                        <div class="title">
+
+                        </div>
+
+                        <div class="panel-group box-vban" id="accordion" role="tablist" aria-multiselectable="true">
+
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-right" id="col-right">
+                    <div class="summary">
+                        <h3>
+                            Thông tin đặt vé
+                        </h3>
+                        <div class="summary-cont clearfix">
+                            <div class="box-col clearfix">
+                                <div class="fl">
+                                    <strong>Mã đặt chỗ:</strong>
+                                </div>
+                                <div class="fr">
+                                    <strong class="clred" th:text="${bookCode}">DAIOEP</strong>
+                                </div>
+                            </div>
+                            <div class="box-col clearfix">
+                                <div class="fl">
+                                    Trạng thái:
+                                </div>
+                                <div class="fr">
+                                    <strong th:if="${#session.getAttribute('status').equals('paid')}"> Đã thanh toán </strong>
+                                    <strong th:if="${#session.getAttribute('status').equals('booked') || #session.getAttribute('status').equals('canceled')}">Chờ xác nhận</strong>
+                                </div>
+                            </div>
+                            <div class="box-col clearfix">
+                                <div class="fl">
+                                    Chuyến bay
+                                </div>
+                                <div class="fr">
+                                    <span th:if="${type == '1'}">Một chiều</span>
+                                    <span th:if="${type == '2'}">Khứ hồi</span>
+
+                                </div>
+                            </div>
+                            <div class="box-col clearfix" th:object="${depart_flight}">
+                                <div class="title-summary">Chiều đi</div>
+                                <div class="box-col-cont clearfix">
+                                    <div class="box-col clearfix">
+                                        <div class="fl">
+                                            Ngày đi:
+                                        </div>
+                                        <div class="fr" th:text="*{depart_date.split('/')[0]+'/'+ depart_date.split('/')[1]+'/'+ depart_date.split('/')[2]}">
+                                        25/04/2016
+                                        </div>
+                                    </div>
+                                    <div class="box-col clearfix">
+                                        <div class="fl">
+                                            Nơi đi:
+                                        </div>
+                                        <div class="fr" th:text="${orig_place + ' ' + depart_flight.depart_date.split('/')[3] }">
+                                            Hanoi, VN (HAN) 12:35
+                                        </div>
+                                    </div>
+                                    <div class="box-col clearfix">
+                                        <div class="fl">
+                                            Nơi đến:
+                                        </div>
+                                        <div class="fr" th:text="${des_place +' '+ depart_flight.arrival_date.split('/')[3]}">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <th:block th:if="${type=='2'}">
+                                <div class="box-col clearfix" th:object="${return_flight}">
+                                    <div class="title-summary">Chiều về</div>
+                                    <div class="box-col-cont clearfix">
+                                        <div class="box-col clearfix">
+                                            <div class="fl">
+                                                Ngày đi:
+                                            </div>
+                                            <div class="fr" th:text="*{depart_date.split('/')[0]+'/'+ depart_date.split('/')[1]+'/'+ depart_date.split('/')[2]}">
+
+                                            </div>
+                                        </div>
+                                        <div class="box-col clearfix">
+                                            <div class="fl">
+                                                Nơi đi:
+                                            </div>
+                                            <div class="fr" th:text="${des_place +' '+ return_flight.depart_date.split('/')[3]}">
+
+                                            </div>
+                                        </div>
+                                        <div class="box-col clearfix">
+                                            <div class="fl">
+                                                Nơi đến:
+                                            </div>
+                                            <div class="fr" th:text="${orig_place  +' '+ return_flight.arrival_date.split('/')[3]}">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                            <div class="box-col clearfix">
+                                <div class="title-summary">
+                                    Hành khách
+                                </div>
+                                <div class="box-col-cont clearfix">
+                                    <th:block th:each="passenger,state: ${passengerList}">
+                                    <div class="box-col clearfix">
+                                        <span class="fl" th:text="${state.index+1 +'. '+passenger.firstName + ' '+ passenger.lastName}"> 1. Nguyen Van A</span>
+                                        <span class="fr" th:if="${passenger.type !='ADT'}" th:text="${passenger.birthday}">06/04/2016</span>
+                                    </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                            <div class="box-col clearfix"  th:object="${payer}">
+                                <div class="title-summary">
+                                    Thông tin liên hệ
+                                </div>
+                                <div class="box-col-cont clearfix">
+                                    <div class="box-col clearfix">
+                                        <span class="fl">Họ tên</span>
+                                        <span class="fr" th:text="*{firstName}">Nguyen Van A</span>
+                                    </div>
+                                    <div class="box-col clearfix">
+                                        <span class="fl">Số điện thoại</span>
+                                        <span class="fr" th:text="*{phone}">0977084686</span>
+                                    </div>
+                                    <div class="box-col clearfix">
+                                        <span class="fl">Email</span>
+                                        <span class="fr" th:text="*{contactEmail}">haonv@vnpay.vn</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-sumcol clearfix">
+                                <div class="fl">
+                                    <strong>TỔNG TIỀN</strong>
+                                </div>
+                                <div class="fr">
+                                    <strong class="clred" th:text="${#numbers.formatDecimal(totalPrice_t, 1,'DEFAULT', 0, 'DEFAULT') + ' VNĐ'}">4,887,000 VNĐ </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!--<script src="js/bootstrap.min.js"></script>-->
+</body>
+</html>

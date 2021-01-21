@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{style/bootstrap.css}" media="all"/>
+    <link rel="stylesheet" type="text/css" th:href="@{style/theme.css}" media="all"/>
+    <link rel="shortcut icon" type="image/svg" th:href="@{images/myimages/airplane.svg}"/>
+
+    <title>Trang chủ</title>
+    <script src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<div id="container">
+    <div class="main clearfix">
+        <div class="inner-container">
+            <ul class="pathway clearfix">
+                <li><a th:href="@{/}">1. Tìm chuyến bay</a></li>
+                <li><a>2. Chọn chuyến bay</a></li>
+                <li><a>3. Thông tin hành khách</a></li>
+                <li class="active"><a>4. Thanh toán</a></li>
+            </ul>
+            <form th:action="@{/payment}" method="post">
+                <div class="box-main clearfix">
+                    <div class="box-item">
+                        <div class="title">
+                            <h2>
+                                Thông tin thanh toán</h2>
+                            <div class="icon-title">
+                            </div>
+                        </div>
+                        <div class="box-itemcont clearfix">
+                            <div class="resule-passenger">
+                                <div class="passenger">
+                                    <div class="clearfix col">
+                                        <span class="name-col"></span>
+                                        <span class="title-name"></span>
+                                        <span class="fullname">
+                                        Mã đặt chỗ
+                                    </span>
+                                        <strong th:text="${bookCode}">DAIOEP</strong>
+                                        <input type="hidden" th:value="${bookCode}" name="bookCode"/>
+                                    </div>
+                                    <div class="clearfix col">
+                                        <span class="name-col"></span>
+                                        <span class="title-name"></span>
+                                        <span class="fullname">
+                                        Số tiền</span>
+                                        <strong class="clred" th:text="${#numbers.formatDecimal(amount, 1,'DEFAULT', 0, 'DEFAULT') + ' VNĐ'}">10,500,000 VND</strong>
+                                        <input type="hidden" th:value="${amount}" name="amount"/>
+                                    </div>
+                                    <div class="clearfix col">
+                                        <span class="name-col"></span>
+                                        <span class="title-name"></span>
+                                        <span class="fullname">
+                                        Nội dung:</span>
+                                        <span class="date-time">Thanh toán tiền mua vé máy bay nội địa</span>
+                                        <input type="hidden" value="Thanh toan tien mua ve may bay" name="orderInfor"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-item">
+                        <div class="title">
+                            <h2>
+                                Phương thức thanh toán</h2>
+                            <div class="icon-title">
+                            </div>
+                        </div>
+                        <div class="box-cont2 clearfix">
+                            <div class="vban-box-cont vbanfix">
+                                <div class="vban-list-box">
+                                    <div class="box-vban">
+                                        <h3 class="vban-title-style active">
+                                            <a href="#"><span>Thanh toán bằng tài khoản/thẻ ATM nội địa</span></a></h3>
+                                        <table class="vban-table" border="0" id="vban-table" style="width: 100%;">
+                                            <tbody>
+                                            <tr>
+                                                <td width="33%">
+                                                    <input type="radio" name="bankcode" id="vietcombank" value="VIETCOMBANK">
+                                                    <label for="vietcombank">
+                                                        <img th:src="@{images/partnerinfo/bank/vietcombank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td width="33%">
+                                                    <input type="radio" name="bankcode" id="agribank" value="AGRIBANK">
+                                                    <label for="agribank">
+                                                        <img th:src="@{images/partnerinfo/bank/agribank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td width="33%">
+                                                    <input type="radio" name="bankcode" id="viettinbank" value="VIETTINBANK">
+                                                    <label for="viettinbank">
+                                                        <img th:src="@{images/partnerinfo/bank/vietinbank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="bidv" value="BIDV">
+                                                    <label for="bidv">
+                                                        <img th:src="@{images/partnerinfo/bank/bidv.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="sacombank" value="SACOMBANK">
+                                                    <label for="sacombank">
+                                                        <img th:src="@{images/partnerinfo/bank/sacombank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="dongabank" value="DONGABANK">
+                                                    <label for="dongabank">
+                                                        <img th:src="@{images/partnerinfo/bank/dongabank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="techcombank" value="TECHCOMBANK">
+                                                    <label for="techcombank">
+                                                        <img th:src="@{images/partnerinfo/bank/techcombank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="vpbank" value="VPBANK">
+                                                    <label for="vpbank">
+                                                        <img th:src="@{images/partnerinfo/bank/vpbank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="eximbank" value="EXIMBANK">
+                                                    <label for="eximbank">
+                                                        <img th:src="@{images/partnerinfo/bank/eximbank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="hdbank" value="HDBANK">
+                                                    <label for="hdbank">
+                                                        <img th:src="@{images/partnerinfo/bank/hdbank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="maritimebank" value="MSBANK">
+                                                    <label for="maritimebank">
+                                                        <img th:src="@{images/partnerinfo/bank/maritimebank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="tpbank" value="TPBANK">
+                                                    <label for="tpbank">
+                                                        <img th:src="@{images/partnerinfo/bank/tpbank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="oceanbank" value="OJB">
+                                                    <label for="oceanbank">
+                                                        <img th:src="@{images/partnerinfo/bank/oceanbank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="ncb" value="NCB">
+                                                    <label for="ncb">
+                                                        <img th:src="@{images/partnerinfo/bank/ncb.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="namabank" value="NAMABANK">
+                                                    <label for="namabank">
+                                                        <img th:src="@{images/partnerinfo/bank/namabank.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="box-vban">
+                                        <h3 class="vban-title-style active">
+                                            <a href="#"><span>Thẻ thanh toán quốc tế</span></a></h3>
+                                        <table class="vban-table">
+                                            <tbody>
+                                            <tr>
+
+                                                <td width="33%">
+                                                    <input type="radio" name="bankcode" id="visa" value="VISA">
+                                                    <label for="visa">
+                                                        <img th:src="@{images/partnerinfo/bank/visa.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td width="33%">
+                                                    <input type="radio" name="bankcode" id="mastercard" value="MASTERCARD">
+                                                    <label for="mastercard">
+                                                        <img th:src="@{images/partnerinfo/bank/mastercard.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                                <td width="33%">&nbsp;</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="box-vban">
+                                        <h3 class="vban-title-style">
+                                            <a href="#"><span>Ví điện tử VnMart</span></a></h3>
+                                        <table class="vban-table">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <input type="radio" name="bankcode" id="vnmart" value="VNMART">
+                                                    <label for="vnmart">
+                                                        <img th:src="@{images/partnerinfo/bank/vnmart.gif}" width="80" height="50" alt=""/> </label>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div style="padding-bottom: 20px;">
+                                        <label for="chktern">
+                                            <input type="checkbox" value="1" name="chktern" id="chktern" class="txt1 validate[required]" required>
+                                            Tôi đã hiểu <a class="under" target="_blank" href="https://www.vban.vn/tro-giup/tabid/64/view/supportdetail/CatId/160/Default.aspx">Chính sách giao hàng, hủy và hoàn trả sản phẩm,
+                                            dịch vụ </a>
+                                        </label>
+                                    </div>
+                                    <div class="btnsearch clearfix" style="padding-bottom: 30px;">
+                                        <input type="button" value="Quay Lại" class="btn-pre" onclick="history.back()">
+                                        &nbsp;
+                                        <input type="submit" value="Tiếp tục" class="btn-pay">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

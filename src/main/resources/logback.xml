@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="logs" value="logs"/>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%green(%t)] %yellow(%logger{36}.%M): %msg%n%throwable
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${logs}/app.log</file>
+
+        <encoder>
+            <Pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} %-5level [%thread] %logger{36}.%M - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${logs}/archived/app_%d{dd-MM-yyyy}.log
+            </fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>10MB</totalSizeCap>
+        </rollingPolicy>
+
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="RollingFile"/>
+    </root>
+
+    <!-- Logging for controller classes-->
+    <logger name="com.vnpay.airbooking.controller" level="debug" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>
+</configuration>

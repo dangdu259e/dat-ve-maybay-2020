@@ -1,0 +1,204 @@
+﻿<!DOCTYPE HTML
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="vn" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{style/theme.css}" media="all" />
+    <title>Trang chủ</title>
+    <script th:src="@{js/jquery-1.7.1.min.js}"></script>
+    <script th:src="@{js/slides.min.jquery.js}"></script>
+    <script type="application/javascript" th:src="@{js/myjs/script.js}"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/svg" th:href="@{images/myimages/airplane.svg}"/>
+    <!-- <script>
+    $(function () {
+    $('#slides').slides({
+    generateNextPrev: true,
+    play: 5000
+    });
+
+    });
+
+    </script> -->
+
+
+
+</head>
+
+<body>
+
+<div id="container">
+    <div class="main clearfix">
+        <div class="inner-container">
+            <ul class="pathway clearfix">
+                <li class="active"><a th:href="@{/}">1. Tìm chuyến bay</a></li>
+                <li><a>2. Chọn chuyến bay</a></li>
+                <li><a>3. Thông tin hành khách</a></li>
+                <li><a>4. Thanh toán</a></li>
+            </ul>
+            <div class="box-main clearfix">
+                <div class="box-search">
+                    <h1 class="title-main"><strong>Đặt Vé Máy Bay</strong></h1>
+                    <form method="POST" th:action="@{search}" th:object="${searchForm}" onsubmit="return checkPerson()">
+                        <ul class="choose clearfix">
+
+                            <input type="radio" name="choose" id="Return" th:field="*{type_fight}" th:value="2" onclick="change_flight_selection()"/>
+                            <label for="Return" id="return-label" class="return-label" onclick="change_flight_selection()">Khứ hồi</label>
+
+                            <input type="radio" name="choose" id="oneway" th:field="*{type_fight}" th:value="1" onclick="change_flight_selection()"/>
+                            <label for="oneway" id="oneway-label" onclick="change_flight_selection()">Một chiều</label>
+
+                        </ul>
+                        <div class="form">
+                            <div class="box clearfix">
+                                <div class="col-50">
+                                    <label>Điểm khởi hành</label>
+                                    <select class="autocomplete-ui-autocomplete-input" th:field="*{orig_place}" id="original">
+                                        <option th:each="airport : ${airports}"
+                                                th:value="${airport.airport_code}"
+                                                th:utext="${airport.airport_name + ' '+ '(' + airport.airport_code + ')'}">Điểm đến</option>
+                                    </select>
+
+                                </div>
+                                <div class="col-50 last">
+                                    <label>Điểm đến</label>
+                                    <select name="option2" class="autocomplete-ui-autocomplete-input" th:field="*{des_place}" id="destination">
+                                        <option th:each="airport : ${airports}"
+                                                th:value="${airport.airport_code}"
+                                                th:utext="${airport.airport_name + ' '+ '(' + airport.airport_code + ')'}">Điểm đến</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="box clearfix">
+                                <div class="col-50">
+                                    <div class="box bottom clearfix">
+                                        <div class="col-ahaft" id="col-ahaft">
+                                            <label>Ngày đi</label>
+                                            <input class="ics_date" type="text" pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$" th:field="${searchForm.orig_date}" placeholder="dd/MM/yyyy"
+                                                   id="datepicker-1"/>
+                                        </div>
+                                        <div class="col-ahaft last" id="col-ahaft last">
+                                            <label>Ngày về</label>
+                                            <input class="ics_date" type="text" pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$" th:field="${searchForm.return_date}" placeholder="dd/MM/yyyy"
+                                                   id="datepicker-2"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-50 last">
+                                    <div class="box bottom clearfix">
+                                        <div class="col-30">
+                                            <label>Người lớn <span>(> 12 tuổi)</span> </label>
+                                            <div class="person1">
+                                                <input class="number-person" id="adl" type="number" min="1" th:field="${searchForm.adult_number}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-30">
+                                            <label>Trẻ em <span>(2 - 12 tuổi)</span> </label>
+                                            <div class="person2">
+                                                <input class="number-person" id="chd" type="number" min="0" th:field="${searchForm.child_number}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-30 last">
+                                            <label>Em bé <span>(< 2 tuổi)</span> </label>
+                                            <div class="person3">
+                                                <input class="number-person" id="inf" type="number" min="0" th:field="${searchForm.baby_number}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box bottom clearfix">
+                                <div class="col-50 last">
+                                    <div class="btn-search">
+                                        <input type="submit" value="Tìm chuyến bay" class="button-search" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#original").children("option[value='HAN']").prop('selected',true);
+        $("#destination").children("option[value='SGN']").prop('selected',true);
+    });
+
+    $(document).ready(function () {
+        $("#datepicker-1").datepicker({dateFormat: 'dd/mm/yy'});
+        $("#datepicker-1").datepicker('setDate','today');
+        $("#datepicker-2").datepicker({dateFormat: 'dd/mm/yy'});
+        $("#datepicker-2").datepicker('setDate','today.getFullYear(), today.getMonth(), today.getDate() + 3');
+    });
+
+
+
+    function checkPerson(){
+        var chd = document.getElementById("chd").value;
+        var adl = document.getElementById("adl").value;
+        var inf = document.getElementById("inf").value;
+        const return_radio = document.getElementById("Return");
+        const oneway_radio = document.getElementById("oneway");
+        const original = document.getElementById("original");
+        const destination = document.getElementById("destination");
+        var depart_date = document.getElementById("datepicker-1").value;
+        var dp_date = depart_date.split("/");
+
+        if(original.value === destination.value){
+            alert("Quý khách nhập điểm khởi hành và điểm đến trùng nhau.\n Vui lòng nhập lại.");
+            return false;
+        }
+        let today = new Date();
+
+        let yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+
+
+
+        if(return_radio.checked == true){
+            var return_date = document.getElementById("datepicker-2").value;
+            var rt_date = return_date.split("/");
+            if(depart_date === "" || depart_date == null){
+                alert("Quý khách vui lòng chọn ngày đi.");
+                return false;
+            }
+            if(return_date === "" || return_date == null){
+                alert("Quý khách vui lòng chọn ngày về.");
+                return false;
+            }
+
+            if(new Date(dp_date[2], dp_date[1] - 1, dp_date[0]).valueOf() >= new Date(rt_date[2], rt_date[1] - 1, rt_date[0]).valueOf() || new Date(rt_date[2], rt_date[1] - 1, rt_date[0]).valueOf() <= yesterday.valueOf()){
+                alert("Quý khách nhập ngày về chưa đúng.\n Vui lòng nhập lại.");
+                return false;
+            }
+        } else {
+            document.getElementById("datepicker-2").value = "";
+        }
+        if(new Date(dp_date[2], dp_date[1] - 1, dp_date[0]).valueOf() < yesterday.valueOf()){
+
+            alert("Quý khách nhập ngày đi chưa đúng.\n Vui lòng nhập lại.");
+            return false;
+        }
+        var sum = Number(chd)+ Number(inf);
+        if(adl < sum){
+            alert("Quý khách đã nhập số trẻ em và em bé quá lớn.\n Vui lòng nhập lại.");
+            return false;
+        }
+        if((Number(adl)+ Number(sum)) >9){
+            alert("Quý khách vui lòng liên hệ với chúng tôi để đặt nhiều hơn 9 chỗ.\n Xin chân thành cảm ơn!")
+            return false;
+        }
+
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <style>
+        h1{
+            color: red;
+            text-align: center;
+        }
+        .content-box{
+            border: 2px solid #0f62ac;
+            border-radius:5px;
+            width: 50%;
+            height: 30%;
+            margin: auto;
+        }
+        a{
+            background: url(../images/img_step.png) no-repeat 0 -318px;
+            color: #fff;
+            font-size: 12px;
+            display: inline-block;
+            text-transform: uppercase;
+            height: 50px;
+            line-height: 51px;
+            padding: 0 0 4px 26px;
+            text-align: left;
+            text-shadow: 0 0 1px #999;
+            width: 151px;
+            text-decoration: none;
+            outline: none;
+        }
+
+    </style>
+    <link rel="shortcut icon" type="image/svg" th:href="@{images/myimages/airplane.svg}"/>
+</head>
+<body>
+<div class="main-box">
+    <div class="content-box">
+        <h1 th:if="${status == 404 || status == 405}">Quý khách chưa đặt vé. Vui lòng quay lại trang chủ</h1>
+        <th:block th:if="${status != 404 && status != 405}">
+            <h1  th:text="${status}"></h1>
+        </th:block>
+
+    </div>
+    <a th:href="@{/}">Quay lại trang chủ</a>
+</div>
+
+</body>
+</html>

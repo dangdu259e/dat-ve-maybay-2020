@@ -1,0 +1,433 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{style/bootstrap.css}" media="all"/>
+    <link rel="stylesheet" type="text/css" th:href="@{style/theme.css}" media="all"/>
+    <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" media="all"/>
+    <title>Trang chủ</title>
+    <script th:src="@{js/jquery-1.7.1.min.js}"></script>
+    <script th:src="@{js/slides.min.jquery.js}"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/svg" th:href="@{images/myimages/airplane.svg}"/>
+
+</head>
+<body>
+<div id="container">
+    <div class="main clearfix">
+        <div class="inner-container">
+            <ul class="pathway clearfix">
+                <li><a th:href="@{/}">1. Tìm chuyến bay</a></li>
+                <li><a>2. Chọn chuyến bay</a></li>
+                <li class="active"><a>3. Thông tin hành khách</a></li>
+                <li><a>4. Thanh toán</a></li>
+            </ul>
+            <div class="box-main clearfix">
+                <div class="col-left" id="col-left-80%">
+                    <div class="plane-detail clearfix">
+                        <form th:action="@{/paymentinfor}" th:object="${bookingForm}" method="post" onsubmit="return check()" >
+                            <div class="box-item" style="padding-top: 15px;">
+                                <th:block th:object="${flightDetailDepart}">
+                                    <div class="title">
+                                        <h2>
+                                            Thông tin chuyến bay
+                                        </h2>
+                                        <div class="icon-title">
+                                        </div>
+                                    </div>
+                                    <div class="box-cont2 clearfix">
+                                        <table width="100%" class="table4" >
+                                            <tbody>
+                                            <tr>
+                                                <td width="18%" class="text-left">
+                                                    Ngày đi:
+                                                </td>
+                                                <td width="21%" class="text-left">
+                                                    <strong id="departdate" pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$" th:value="${flightDetailDepart.depart_date.split('/')[0] + '/' +flightDetailDepart.depart_date.split('/')[1] + '/' + flightDetailDepart.depart_date.split('/')[2]}" th:text="${flightDetailDepart.depart_date.split('/')[0] + '/' +flightDetailDepart.depart_date.split('/')[1] + '/' + flightDetailDepart.depart_date.split('/')[2]}">25/04/2016</strong>
+                                                </td>
+                                                <td width="28%" class="text-right">
+                                                    Chuyến Bay:
+                                                </td>
+                                                <td width="33%" class="text-left">
+                                                    <th:block th:if="${type_t == '0'}">
+                                                        <strong>Một chiều </strong>
+                                                    </th:block>
+                                                    <th:block th:if="${type_t != '0'}">
+                                                        <strong>Khứ hồi</strong>
+                                                    </th:block>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span>Ngày về:</span>
+                                                </td>
+                                                <td class="text-left" >
+                                                        <strong th:if="${type_t != '0'}" th:text="${flightDetailReturn.depart_date.split('/')[0] + '/' +flightDetailReturn.depart_date.split('/')[1] + '/' + flightDetailReturn.depart_date.split('/')[2]}"></strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    Số lượng hành khách:
+                                                </td>
+                                                <td class="text-left">
+                                                    <strong th:text="${flightDetailDepart.getAdult()} + ' Người lớn, '
+                                                            + ${flightDetailDepart.getChild()} + ' Trẻ em, '
+                                                            + ${flightDetailDepart.getInfant()} + ' Em bé' "></strong>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <table width="100%" class="table3">
+                                            <tbody>
+                                            <tr class="title2">
+                                                <td colspan="7" class="text-plane">
+                                                    <img width="24" height="16" th:src="@{images/departure.png}"
+                                                         alt="chuyen bay di"/>
+                                                    Chiều đi từ:
+                                                    <strong th:text="${orig_place.airport_name + ' (' + orig_place.getAirport_code() + ')'}">Hanoi,
+                                                        VN (HAN)</strong>
+                                                    đến
+                                                    <strong th:text="${des_place.airport_name + ' (' + des_place.getAirport_code() +') - ' + flightDetailDepart.depart_date.split('/')[0] + '/' +flightDetailDepart.depart_date.split('/')[1] + '/' + flightDetailDepart.depart_date.split('/')[2]}">Jakarta
+                                                        Jkt, ID (JKT) - 26/04/2016</strong>
+                                                </td>
+                                            </tr>
+                                            <tr class="title-row2">
+                                                <td width="17%" class="text-left">
+                                                    <strong>Hãng hàng không</strong>
+                                                </td>
+                                                <td width="12%">
+                                                    <strong>Giờ đi</strong>
+                                                </td>
+                                                <td width="12%">
+                                                    <strong>Giờ đến</strong>
+                                                </td>
+                                                <td width="10%">
+                                                    <strong>Hạng vé</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="img-airline text-left">
+                                                    <div class="airline_brand clearfix">
+                                                        <div class="img-fly"><span class="img50"><img th:src="@{images/VN.gif}"
+                                                                                                      alt="VN"/></span>
+                                                        </div>
+                                                        <div class="text-fly">
+                                                            Vietnam Airline<br/>
+                                                            <strong th:text="${number}">VN 662</strong>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="time">
+                                                    <b th:text="${flightDetailDepart.depart_date.split('/')[3]}">12:35</b>
+                                                    <th:block th:text="${orig_place.airport_code}"></th:block>
+                                                </td>
+                                                <td class="time">
+                                                    <b th:text="${flightDetailDepart.arrival_date.split('/')[3]}">17:35</b>
+                                                    <th:block th:text="${des_place.airport_code}"></th:block>
+                                                </td>
+                                                <td>
+                                                    Phổ thông
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <th:block th:if="${type_t != '0'}">
+                                            <table width="100%" class="table3">
+                                                <tbody>
+                                                <tr class="title2">
+                                                    <td colspan="7" class="text-plane">
+                                                        <img width="24" height="16" th:src="@{images/arrival.png}"
+                                                             alt="chuyen bay ve"/>
+                                                        Chiều về từ:<strong
+                                                            th:text="${des_place.airport_name + ' (' + des_place.getAirport_code() + ')'}">
+                                                        Jakarta
+                                                        Jkt, ID (JKT)</strong> đến <strong
+                                                            th:text="${orig_place.airport_name + ' (' + orig_place.getAirport_code() +') - ' + flightDetailReturn.depart_date.split('/')[0] + '/' +flightDetailReturn.depart_date.split('/')[1] + '/' + flightDetailReturn.depart_date.split('/')[2]}">Hanoi,
+                                                        VN (HAN) - 02/05/2016</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr class="title-row2">
+                                                    <td width="17%" class="text-left">
+                                                        <strong>Hãng hàng không</strong>
+                                                    </td>
+                                                    <td width="12%">
+                                                        <strong>Giờ đi</strong>
+                                                    </td>
+                                                    <td width="12%">
+                                                        <strong>Giờ đến</strong>
+                                                    </td>
+                                                    <td width="10%">
+                                                        <strong>Hạng vé</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="img-airline text-left">
+                                                        <div class="airline_brand clearfix">
+                                                            <div class="img-fly"><span class="img50"><img
+                                                                    th:src="@{images/VN.gif}" alt="VN"/></span></div>
+                                                            <div class="text-fly">
+                                                                Vietnam Airline<br/>
+                                                                <strong th:text="${number_t}">VN 664</strong>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="time">
+                                                        <b th:text="${flightDetailReturn.depart_date.split('/')[3]}">12:35</b>
+                                                        <th:block th:text="${original_t.airport_code}"></th:block>
+                                                    <td class="time">
+                                                        <b th:text="${flightDetailReturn.arrival_date.split('/')[3]}">12:35</b>
+                                                        <th:block th:text="${destination_t.airport_code}"></th:block>
+                                                    </td>
+                                                    <td>
+                                                        Phổ thông
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </th:block>
+                                        <div class="subtotal clearfix">
+                                            <strong>TỔNG TIỀN:</strong>
+                                            <th:block th:if="${type_t == '0'}">
+                                                <strong class="clred"
+                                                        th:text="${flightDetailDepart.priceToString()}"></strong>
+                                            </th:block>
+                                            <th:block th:if="${type_t != '0'}">
+                                                <strong class="clred"
+                                                        th:text="${#numbers.formatDecimal(totalPrice_t, 1,'DEFAULT', 0, 'DEFAULT') + ' VNĐ'}">10,500,000
+                                                    VNĐ</strong>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                            <div class="box-item">
+                                <div class="title">
+                                    <h2>Thông tin hành khách</h2>
+                                    <div class="icon-title"></div>
+                                </div>
+                                <div class="box-itemcont clearfix">
+                                    <div class="passenger">
+<!--                                        <th:block-->
+<!--                                                th:each="adultNum : ${#numbers.sequence(1, flightDetailDepart.getAdult())}">-->
+                                        <th:block th:each="passenger,itemStat : ${bookingForm.getPassengerList()}">
+                                            <th:block th:if="${passenger.type.equals('ADT')}">
+                                            <div class="clearfix col">
+                                                <span class="name-col">Người lớn </span>
+                                                <select class="title-name" th:field="*{passengerList[__${itemStat.index}__].gender}">
+                                                    <option value="1" selected="selected">Ông</option>
+                                                    <option value="0">Bà</option>
+                                                    <option value="1">Anh</option>
+                                                    <option value="0">Chị</option>
+                                                </select>
+
+                                                <input class="sername"  type="text" id="name" th:field="*{passengerList[__${itemStat.index}__].firstName}" pattern="[A-Za-z]+$" placeholder="Họ*" required/>
+                                                <input class="firtname" type="text" id="name" th:field="*{passengerList[__${itemStat.index}__].lastName}" pattern="[A-Za-z\s]+$" placeholder="Đệm và tên*" required/>
+                                                <input class="passport" type="text" id="passportid" th:field="*{passengerList[__${itemStat.index}__].passportId}" placeholder="Số hộ chiếu" />
+
+
+                                                <input type="hidden" th:field="*{passengerList[__${itemStat.index}__].type}" th:value="ADT" />
+                                            </div>
+                                            </th:block>
+
+
+                                            <th:block th:if="${passenger.type.equals('CHD')}">
+                                            <div class="clearfix col">
+                                                    <span class="name-col">
+                                                        Trẻ em
+                                                        <br/>
+                                                        <em class="small">(2-12 tuổi)</em></span>
+                                                <select class="title-name" th:field="*{passengerList[__${itemStat.index}__].gender}">
+                                                    <option th:value="1">Nam</option>
+                                                    <option th:value="0" selected="selected">Nữ</option>
+                                                </select>
+                                                <input class="sername" type="text" id="name" name="name" th:field="*{passengerList[__${itemStat.index}__].firstName}" pattern="[A-Za-z]+$" placeholder="Họ*" required/>
+                                                <input class="firtname" type="text" id="name" name="name" th:field="*{passengerList[__${itemStat.index}__].lastName}" pattern="[A-Za-z\s]+$" placeholder="Đệm và tên*"required/>
+                                                <input type="hidden" th:field="*{passengerList[__${itemStat.index}__].type}" th:value="CHD" />
+                                                <input class="datepicker-child" type="text" th:id="'birthCHD'+${itemStat.index}"
+                                                       th:field="*{passengerList[__${itemStat.index}__].birthday}"
+                                                       value="*{passengerList[__${itemStat.index}__].birthday}"
+                                                       pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
+                                                       placeholder="Ngày tháng năm sinh*" required
+                                                       onblur="checkCHD(this)" onchange="if(checkCHD(this)==false) {document.getElementById(this.id).value=''}"
+                                                />
+                                            </div>
+                                            </th:block>
+
+                                            <th:block th:if="${passenger.type.equals('INF')}">
+                                            <div class="clearfix col">
+                                                    <span class="name-col">
+                                                        Em bé
+                                                        <br/>
+                                                        <em class="small">(&lt;2 tuổi)</em></span>
+                                                <select class="title-name" th:field="*{passengerList[__${itemStat.index}__].gender}">
+                                                    <option value="1" selected="selected">Nam</option>
+                                                    <option value="0">Nữ</option>
+                                                </select>
+                                                <input class="sername" type="text" id="name" name="name" th:field="*{passengerList[__${itemStat.index}__].firstName}" pattern="[A-Za-z]+$" placeholder="Họ*" required/>
+                                                <input class="firtname" type="text" id="name" name="name" th:field="*{passengerList[__${itemStat.index}__].lastName}" pattern="[A-Za-z\s]+$" placeholder="Đệm và tên*" required/>
+                                                <input type="hidden" th:field="*{passengerList[__${itemStat.index}__].type}" th:value="INF" />
+                                                <input class="datepicker-infant" type="text" th:id="'birthINF'+${itemStat.index}"
+                                                       th:field="*{passengerList[__${itemStat.index}__].birthday}"
+                                                       pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
+                                                       placeholder="Ngày tháng năm sinh*" required
+                                                       onblur="checkINF(this)" onchange="if(checkINF(this)==false) {document.getElementById(this.id).value=''}"
+                                                />
+                                            </div>
+                                            </th:block>
+                                        </th:block>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="box-item">
+                                <div class="title">
+                                    <h2>Thông tin liên hệ </h2>
+                                    <div class="icon-title"></div>
+                                </div>
+                                <div class="box-itemcont clearfix">
+                                    <p><i>(<span style="color:red">*</span>)Chú ý: Quý khách vui lòng nhập tiếng việt không dấu</i>
+                                    </p>
+                                    <div class="box">
+                                        <div class="clearfix col">
+                                            <span class="name-col">Xưng hô</span>
+                                            <select class="title-name" th:field="${bookingForm.payer.gender}">
+                                                <option selected="selected" value="1">Ông</option>
+                                                <option value="0">Bà</option>
+                                                <option value="1">Anh</option>
+                                                <option value="0">Chị</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="clearfix col">
+                                            <span class="name-col">Họ tên <span class="clred">*</span></span>
+                                            <input type="text" class="w300" name="name" id="name" pattern="[A-Za-z\s]+$" th:field="${bookingForm.payer.firstName}"  required/>
+
+                                        </div>
+                                        <div class="clearfix col">
+                                            <span class="name-col">Số điện thoại <span class="clred">*</span> </span>
+                                            <input type="text" class="w300" id="phone" th:field="${bookingForm.payer.phone}" value="0977 084 686" required/>
+
+                                        </div>
+                                        <div class="clearfix col">
+                                            <span class="name-col">Email <span class="clred">*</span></span>
+                                            <input type="text" class="w300" id="email" th:field="${bookingForm.payer.contactEmail}" value="haonv@vnpay.vn" required/>
+                                        </div>
+                                        <div class="clearfix col">
+                                            <span class="name-col">Địa chỉ <span class="clred">*</span></span>
+                                            <input type="text" class="w300" th:field="${bookingForm.payer.address}" value="22 lang ha" required/>
+
+                                        </div>
+                                        <div class="clearfix col">
+                                            <span class="name-col">Ghi chú</span>
+                                            <textarea style="width:457px; height:80px" th:field="${bookingForm.payer.note}"></textarea>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="btnsearch clearfix">
+                                <input type="button" class="btn-pre" value="Quay Lại" onclick="history.back()"/> &nbsp;
+                                <input type="submit" class="btn-next" value="Đặt Vé"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $(".datepicker-infant").datepicker({dateFormat: 'dd/mm/yy'});
+        $(".datepicker-child").datepicker({dateFormat: 'dd/mm/yy'});
+
+    });
+    function check() {
+        var email = document.getElementById('email');
+        // var filter = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var filter = /^[a-z][a-z0-9_\.]{3,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,6}){1,2}$/;
+        if (!filter.test(email.value)) {
+            alert('Quý khách vui lòng nhập Email theo đúng định dạng.\nExample@gmail.com');
+            email.focus;
+            return false;
+        }
+        var number= document.getElementById('passportid').value;
+        if(number != "") {
+            if (!(/^-?[\d.]+(?:e-?\d+)?$/.test(number))) {
+                alert("Số hộ chiếu của quý khách không hợp lệ theo quy chuẩn Việt Nam.\n Quý khách vui lòng nhập lại.");
+                return false;
+            }
+        }
+
+        var phone= document.getElementById('phone').value;
+        var phone_regex= /((09|01[2|6|8|9])+([0-9]{8})|((03[2|3|4|8|9])+([0-9]{7})))\b/;
+        if(!phone.match(phone_regex)){
+            alert("Số điện thoại của quý khách không hợp lệ.\n Quý khách vui lòng nhập lại.");
+            return false;
+        }
+        return true;
+    }
+
+    function checkCHD(element) {
+        //get id
+        var depart = document.getElementById('departdate').innerHTML;
+        var chd = document.getElementById(element.id).value;
+        //check age
+        if (chd != '') {
+            var birthchd = chd.split("/");
+            var brth_date = new Date(birthchd[2], birthchd[1], birthchd[0]);
+            var today = new Date(depart.split("/")[2], depart.split("/")[1], depart.split('/')[0]);
+            var age = today.getFullYear() - brth_date.getFullYear();
+            var mth = today.getMonth() - brth_date.getMonth();
+            if (mth < 0 || (mth === 0 && today.getDate() < brth_date.getDate())) {
+                age = age - 1;
+            }
+            if (age>=2 && age <=12) {
+                // alert("Hợp lý");
+                return true;
+            }
+            else {
+                alert("Ngày sinh của trẻ em không phù hợp. Quý khách vui lòng điền lại ngày sinh theo định dạng DD/MM/YYYY");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function checkINF(element) {
+        //get id
+        var depart = document.getElementById('departdate').innerHTML;
+        var inf = document.getElementById(element.id).value;
+        //check age
+        if (inf != '') {
+            var birthinf= inf.split("/");
+            var brth_date = new Date(birthinf[2], birthinf[1], birthinf[0]);
+            var today = new Date(depart.split("/")[2], depart.split("/")[1], depart.split('/')[0]);
+            var age = today.getFullYear() - brth_date.getFullYear();
+            var mth = today.getMonth() - brth_date.getMonth();
+            if (mth < 0 || (mth === 0 && today.getDate() < brth_date.getDate())) {
+                age = age - 1;
+            }
+            if (age>=0 && age<2) {
+                // alert("Hợp lý");
+                return true;
+            }
+            else {
+                alert("Ngày sinh của em bé không phù hợp. Quý khách vui lòng điền lại ngày sinh theo định dạng DD/MM/YYYY");
+                return false;
+            }
+        }
+        return true;
+    }
+
+</script>
+
+</body>
+</html>
